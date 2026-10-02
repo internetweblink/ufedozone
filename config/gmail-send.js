@@ -1,94 +1,47 @@
-const fs = require("fs");
-const path = require("path");
 const { google } = require("googleapis");
 
-
 // ========================================
-// LOAD GOOGLE OAUTH CREDENTIALS
+// GMAIL OAUTH SETTINGS
 // ========================================
 
-const credentialsPath = path.join(
-    __dirname,
-    "..",
-    "credentials"
-);
+const clientId = process.env.GMAIL_CLIENT_ID;
 
-const credentialFiles = fs
-    .readdirSync(credentialsPath)
-    .filter(file =>
-        file.endsWith(".json") &&
-        file !== "gmail-token.json"
-    );
+const clientSecret = process.env.GMAIL_CLIENT_SECRET;
 
-if (credentialFiles.length === 0) {
-    throw new Error(
-        "No Google OAuth credentials JSON file found."
-    );
-}
+const refreshToken = process.env.GMAIL_REFRESH_TOKEN;
 
-const credentials = JSON.parse(
-    fs.readFileSync(
-        path.join(
-            credentialsPath,
-            credentialFiles[0]
-        ),
-        "utf8"
-    )
-);
-
-const {
-    client_secret,
-    client_id,
-    redirect_uris
-} = credentials.web;
+const redirectUri =
+    process.env.GMAIL_REDIRECT_URI ||
+    "http://localhost:3000/auth/gmail/callback";
 
 
 // ========================================
-// CREATE OAUTH CLIENT
+// CREATE GMAIL CLIENT
 // ========================================
 
-const oauth2Client =
-    new google.auth.OAuth2(
-        client_id,
-        client_secret,
-        redirect_uris[0]
-    );
+let gmail = null;
 
+if (
+    clientId &&
+    clientSecret &&
+    refreshToken
+) {
+    const oauth2Client =
+        new google.auth.OAuth2(
+            clientId,
+            clientSecret,
+            redirectUri
+        );
 
-// ========================================
-// LOAD SAVED GMAIL TOKEN
-// ========================================
+    oauth2Client.setCredentials({
+        refresh_token: refreshToken
+    });
 
-const tokenPath = path.join(
-    credentialsPath,
-    "gmail-token.json"
-);
-
-if (!fs.existsSync(tokenPath)) {
-    throw new Error(
-        "gmail-token.json was not found. Please connect Gmail first."
-    );
-}
-
-const tokens = JSON.parse(
-    fs.readFileSync(
-        tokenPath,
-        "utf8"
-    )
-);
-
-oauth2Client.setCredentials(tokens);
-
-
-// ========================================
-// CREATE GMAIL API
-// ========================================
-
-const gmail =
-    google.gmail({
+    gmail = google.gmail({
         version: "v1",
         auth: oauth2Client
     });
+}
 
 
 // ========================================
@@ -100,6 +53,12 @@ async function sendEmail({
     subject,
     text
 }) {
+
+    if (!gmail) {
+        throw new Error(
+            "Gmail is not configured. Please add GMAIL_CLIENT_ID, GMAIL_CLIENT_SECRET and GMAIL_REFRESH_TOKEN."
+        );
+    }
 
     const message = [
         `From: UfedoZone <${process.env.GMAIL_USER}>`,
@@ -122,7 +81,6 @@ async function sendEmail({
     const result =
         await gmail.users.messages.send({
             userId: "me",
-
             requestBody: {
                 raw: encodedMessage
             }
@@ -132,6 +90,10 @@ async function sendEmail({
     return result.data;
 }
 
+
+// ========================================
+// EXPORT
+// ========================================
 
 module.exports = {
     sendEmail
