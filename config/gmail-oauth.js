@@ -8,30 +8,45 @@ const credentialsPath = path.join(
     "credentials"
 );
 
-const credentialFiles = fs
-    .readdirSync(credentialsPath)
-    .filter(file => file.endsWith(".json"));
+let oauth2Client = null;
 
-if (credentialFiles.length === 0) {
-    throw new Error(
-        "No Google OAuth JSON file found in the credentials folder."
+try {
+    if (fs.existsSync(credentialsPath)) {
+
+        const credentialFiles = fs
+            .readdirSync(credentialsPath)
+            .filter(file => file.endsWith(".json"));
+
+        if (credentialFiles.length > 0) {
+
+            const credentials = JSON.parse(
+                fs.readFileSync(
+                    path.join(
+                        credentialsPath,
+                        credentialFiles[0]
+                    ),
+                    "utf8"
+                )
+            );
+
+            const {
+                client_secret,
+                client_id,
+                redirect_uris
+            } = credentials.web;
+
+            oauth2Client = new google.auth.OAuth2(
+                client_id,
+                client_secret,
+                redirect_uris[0]
+            );
+        }
+    }
+} catch (error) {
+    console.error(
+        "Gmail OAuth setup skipped:",
+        error.message
     );
 }
-
-const credentials = JSON.parse(
-    fs.readFileSync(
-        path.join(credentialsPath, credentialFiles[0]),
-        "utf8"
-    )
-);
-
-const { client_secret, client_id, redirect_uris } =
-    credentials.web;
-
-const oauth2Client = new google.auth.OAuth2(
-    client_id,
-    client_secret,
-    redirect_uris[0]
-);
 
 module.exports = oauth2Client;
