@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Verify Email - UfedoZone</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .verify-box {
+            width: 100%;
+            max-width: 420px;
+            background: white;
+            padding: 35px 25px;
+            border-radius: 18px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .logo {
+            width: 65px;
+            height: 65px;
+            margin: 0 auto 15px;
+            border-radius: 18px;
+            background: #1769e0;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            color: #222;
+            font-size: 25px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 15px;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+        #emailText {
+            font-weight: bold;
+            color: #1769e0;
+        }
+
+        .otp-input {
+            width: 100%;
+            padding: 16px;
+            border: 1px solid #d5dbe3;
+            border-radius: 10px;
+            font-size: 28px;
+            text-align: center;
+            letter-spacing: 10px;
+            outline: none;
+        }
+
+        .otp-input:focus {
+            border-color: #1769e0;
+            box-shadow: 0 0 0 3px rgba(23, 105, 224, 0.1);
+        }
+
+        .verify-btn {
+            width: 100%;
+            margin-top: 20px;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #1769e0;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .verify-btn:hover {
+            background: #0d57c7;
+        }
+
+        .verify-btn:disabled {
+            background: #9bb9e8;
+            cursor: not-allowed;
+        }
+
+        .message {
+            margin-top: 15px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .error {
+            color: #d93025;
+        }
+
+        .success {
+            color: #188038;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 22px;
+            color: #1769e0;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="verify-box">
+
+        <div class="logo">
+            UZ
+        </div>
+
+        <h1>
+            Verify Your Email
+        </h1>
+
+        <p class="subtitle">
+            We sent a 6-digit verification code to
+            <span id="emailText">your email</span>.
+            Enter the code below to complete your registration.
+        </p>
+
+        <form id="verifyForm">
+
+            <input
+                type="text"
+                id="otp"
+                class="otp-input"
+                placeholder="000000"
+                maxlength="6"
+                inputmode="numeric"
+                autocomplete="one-time-code"
+                required
+            >
+
+            <button
+                type="submit"
+                class="verify-btn"
+                id="verifyBtn"
+            >
+                Verify Account
+            </button>
+
+        </form>
+
+        <div
+            id="message"
+            class="message"
+        ></div>
+
+        <a
+            href="register.html"
+            class="back-link"
+        >
+            ← Back to registration
+        </a>
+
+    </div>
+
+    <script src="verify.js"></script>
+
+</body>
+</html>

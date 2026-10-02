@@ -1,0 +1,997 @@
+/* =========================================================
+   UFEDOZONE LOGIN
+   ========================================================= */
+
+:root {
+
+    --blue: #073da9;
+    --blue-light: #1769e0;
+    --blue-dark: #052e83;
+
+    --red: #ff1738;
+    --red-dark: #e40024;
+
+    --black: #101828;
+    --text: #344054;
+    --muted: #667085;
+
+    --background: #f3f6fc;
+    --white: #ffffff;
+
+    --border: #e1e7ef;
+
+    --shadow:
+        0 20px 60px rgba(
+            16,
+            24,
+            40,
+            0.12
+        );
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+body {
+
+    min-height: 100vh;
+
+    display: flex;
+
+    flex-direction: column;
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    color: var(--text);
+
+    background: var(--background);
+}
+
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+
+button,
+input {
+    font-family: inherit;
+}
+
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.auth-header {
+
+    background:
+        linear-gradient(
+            135deg,
+            #073a9f,
+            #0642bd
+        );
+
+    color: #ffffff;
+
+    box-shadow:
+        0 4px 20px rgba(
+            0,
+            0,
+            0,
+            0.13
+        );
+}
+
+
+.auth-header-inner {
+
+    width: min(
+        1180px,
+        calc(100% - 40px)
+    );
+
+    height: 78px;
+
+    margin: auto;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+
+.auth-brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+.auth-logo {
+
+    width: 55px;
+    height: 55px;
+
+    object-fit: contain;
+
+    border-radius: 14px;
+}
+
+
+.auth-brand-name {
+
+    color: #ffffff;
+
+    font-size: 28px;
+
+    font-weight: 800;
+
+    letter-spacing: -1px;
+}
+
+
+.auth-brand-name span {
+    color: var(--red);
+}
+
+
+.auth-header-right {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    font-size: 13px;
+}
+
+
+.header-create {
+
+    height: 40px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 0 20px;
+
+    border-radius: 22px;
+
+    background: var(--red);
+
+    color: #ffffff;
+
+    font-weight: 700;
+
+    transition: 0.25s ease;
+}
+
+
+.header-create:hover {
+
+    background: var(--red-dark);
+
+    transform: translateY(-1px);
+}
+
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.auth-page {
+
+    position: relative;
+
+    flex: 1;
+
+    overflow: hidden;
+
+    padding: 65px 20px;
+
+    background:
+        radial-gradient(
+            circle at 10% 20%,
+            rgba(
+                23,
+                105,
+                224,
+                0.08
+            ),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 90% 80%,
+            rgba(
+                255,
+                23,
+                56,
+                0.06
+            ),
+            transparent 25%
+        ),
+        var(--background);
+}
+
+
+.auth-background-shape {
+
+    position: absolute;
+
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+
+.shape-one {
+
+    width: 430px;
+    height: 430px;
+
+    left: -230px;
+    top: 100px;
+
+    background:
+        rgba(
+            23,
+            105,
+            224,
+            0.06
+        );
+}
+
+
+.shape-two {
+
+    width: 300px;
+    height: 300px;
+
+    right: -140px;
+    bottom: -100px;
+
+    background:
+        rgba(
+            255,
+            23,
+            56,
+            0.05
+        );
+}
+
+
+
+/* =========================================================
+   LAYOUT
+========================================================= */
+
+.login-layout {
+
+    position: relative;
+
+    z-index: 2;
+
+    width: min(
+        1050px,
+        100%
+    );
+
+    margin: auto;
+
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        430px;
+
+    align-items: center;
+
+    gap: 75px;
+}
+
+
+
+/* =========================================================
+   INTRO
+========================================================= */
+
+.login-intro {
+
+    max-width: 550px;
+}
+
+
+.intro-label {
+
+    display: inline-block;
+
+    margin-bottom: 13px;
+
+    color: var(--red);
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.2px;
+}
+
+
+.login-intro h1 {
+
+    color: var(--blue);
+
+    font-size: clamp(
+        42px,
+        5vw,
+        64px
+    );
+
+    line-height: 1.04;
+
+    letter-spacing: -2.5px;
+
+    font-weight: 800;
+
+    margin-bottom: 20px;
+}
+
+
+.login-intro h1 span {
+
+    display: block;
+
+    color: var(--red);
+}
+
+
+.login-intro > p {
+
+    max-width: 500px;
+
+    color: var(--muted);
+
+    font-size: 16px;
+
+    line-height: 1.75;
+
+    margin-bottom: 32px;
+}
+
+
+.intro-points {
+
+    display: grid;
+
+    gap: 17px;
+}
+
+
+.intro-points > div {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+}
+
+
+.intro-icon {
+
+    width: 43px;
+    height: 43px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 12px;
+
+    color: #ffffff;
+
+    background: var(--red);
+
+    font-size: 21px;
+}
+
+
+.intro-icon.blue {
+
+    background: var(--blue);
+}
+
+
+.intro-points strong {
+
+    display: block;
+
+    color: var(--black);
+
+    font-size: 13px;
+
+    margin-bottom: 1px;
+}
+
+
+.intro-points small {
+
+    color: var(--muted);
+
+    font-size: 11px;
+}
+
+
+
+/* =========================================================
+   LOGIN CARD
+========================================================= */
+
+.login-card {
+
+    padding: 34px;
+
+    border-radius: 22px;
+
+    background: #ffffff;
+
+    border: 1px solid var(--border);
+
+    box-shadow: var(--shadow);
+}
+
+
+.card-logo {
+
+    width: 58px;
+    height: 58px;
+
+    margin-bottom: 18px;
+
+    border-radius: 15px;
+
+    overflow: hidden;
+}
+
+
+.card-logo img {
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+}
+
+
+.login-card h2 {
+
+    color: var(--black);
+
+    font-size: 29px;
+
+    line-height: 1.2;
+
+    margin-bottom: 5px;
+}
+
+
+.card-subtitle {
+
+    color: var(--muted);
+
+    font-size: 13px;
+
+    margin-bottom: 25px;
+}
+
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.form-group {
+
+    margin-bottom: 18px;
+}
+
+
+.form-group label {
+
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #344054;
+
+    font-size: 12px;
+
+    font-weight: 750;
+}
+
+
+.input-wrap {
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+}
+
+
+.input-icon {
+
+    position: absolute;
+
+    left: 14px;
+
+    color: var(--blue);
+
+    font-size: 14px;
+
+    z-index: 2;
+}
+
+
+.input-wrap input {
+
+    width: 100%;
+
+    height: 50px;
+
+    padding:
+        0 75px
+        0 42px;
+
+    border:
+        1px solid #d9e0ea;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    color: var(--black);
+
+    background: #ffffff;
+
+    font-size: 13px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.input-wrap input::placeholder {
+    color: #98a2b3;
+}
+
+
+.input-wrap input:focus {
+
+    border-color: var(--blue-light);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(
+            23,
+            105,
+            224,
+            0.10
+        );
+}
+
+
+.password-toggle {
+
+    position: absolute;
+
+    right: 10px;
+
+    padding: 7px 9px;
+
+    border: 0;
+
+    border-radius: 7px;
+
+    color: var(--blue);
+
+    background: #eef5ff;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+
+
+/* =========================================================
+   LOGIN BUTTON
+========================================================= */
+
+.login-btn {
+
+    width: 100%;
+
+    height: 52px;
+
+    border: 0;
+
+    border-radius: 10px;
+
+    color: #ffffff;
+
+    background: var(--red);
+
+    font-size: 15px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 7px 18px rgba(
+            255,
+            23,
+            56,
+            0.22
+        );
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.login-btn:hover {
+
+    background: var(--red-dark);
+
+    transform: translateY(-1px);
+}
+
+
+.login-btn:disabled {
+
+    opacity: 0.65;
+
+    cursor: not-allowed;
+
+    transform: none;
+}
+
+
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+.login-message {
+
+    min-height: 20px;
+
+    margin-top: 12px;
+
+    color: var(--red);
+
+    font-size: 12px;
+
+    line-height: 1.5;
+
+    text-align: center;
+}
+
+
+
+/* =========================================================
+   BOTTOM
+========================================================= */
+
+.card-divider {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin: 22px 0 14px;
+
+    color: #98a2b3;
+
+    font-size: 11px;
+}
+
+
+.card-divider::before,
+.card-divider::after {
+
+    content: "";
+
+    flex: 1;
+
+    height: 1px;
+
+    background: #eaecf0;
+}
+
+
+.create-account-link {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    height: 45px;
+
+    border-radius: 9px;
+
+    color: var(--blue);
+
+    background: #eef5ff;
+
+    border: 1px solid #dbe9ff;
+
+    font-size: 13px;
+
+    font-weight: 750;
+
+    transition: 0.2s ease;
+}
+
+
+.create-account-link:hover {
+
+    background: #e2efff;
+}
+
+
+.login-note {
+
+    margin-top: 17px;
+
+    color: #98a2b3;
+
+    font-size: 10px;
+
+    line-height: 1.6;
+
+    text-align: center;
+}
+
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.auth-footer {
+
+    min-height: 58px;
+
+    padding: 15px 25px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    background: #06399e;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.65
+        );
+
+    font-size: 10px;
+}
+
+
+.auth-footer > div:last-child {
+
+    display: flex;
+
+    gap: 9px;
+
+    align-items: center;
+}
+
+
+.auth-footer a:hover {
+    color: #ffffff;
+}
+
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 800px) {
+
+    .auth-header-inner {
+
+        width: calc(100% - 28px);
+
+        height: 68px;
+    }
+
+
+    .auth-logo {
+
+        width: 45px;
+        height: 45px;
+    }
+
+
+    .auth-brand-name {
+
+        font-size: 23px;
+    }
+
+
+    .auth-header-right > span {
+        display: none;
+    }
+
+
+    .header-create {
+
+        height: 38px;
+
+        padding: 0 15px;
+
+        font-size: 11px;
+    }
+
+
+    .auth-page {
+
+        padding: 40px 15px;
+    }
+
+
+    .login-layout {
+
+        grid-template-columns: 1fr;
+
+        gap: 30px;
+    }
+
+
+    .login-intro {
+
+        max-width: 600px;
+
+        margin: auto;
+
+        text-align: center;
+    }
+
+
+    .login-intro h1 {
+
+        font-size: 43px;
+
+        letter-spacing: -1.8px;
+    }
+
+
+    .login-intro > p {
+
+        margin-left: auto;
+
+        margin-right: auto;
+
+        font-size: 14px;
+    }
+
+
+    .intro-points {
+
+        max-width: 360px;
+
+        margin: auto;
+
+        text-align: left;
+    }
+
+
+    .login-card {
+
+        width: 100%;
+
+        max-width: 460px;
+
+        margin: auto;
+
+        padding: 28px 22px;
+    }
+
+
+    .auth-footer {
+
+        flex-direction: column;
+
+        justify-content: center;
+
+        text-align: center;
+    }
+
+}
+
+
+@media (max-width: 430px) {
+
+    .login-intro h1 {
+
+        font-size: 36px;
+    }
+
+
+    .login-card {
+
+        border-radius: 17px;
+
+        padding: 24px 18px;
+    }
+
+
+    .auth-header-right {
+
+        gap: 0;
+    }
+
+
+    .header-create {
+
+        padding: 0 13px;
+    }
+
+}

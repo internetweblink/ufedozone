@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Create your free UfedoZone account."
+    >
+
+    <title>Create Account - UfedoZone</title>
+
+    <link
+        rel="stylesheet"
+        href="register.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="register-header">
+
+    <div class="register-header-inner">
+
+        <a
+            href="/"
+            class="register-brand"
+        >
+
+            <img
+                src="ufedozone-logo.png"
+                alt="UfedoZone"
+                class="register-logo"
+            >
+
+            <span class="register-brand-name">
+                Ufedo<span>Zone</span>
+            </span>
+
+        </a>
+
+
+        <div class="register-header-right">
+
+            <span>
+                Already have an account?
+            </span>
+
+            <a
+                href="/login.html"
+                class="login-header-button"
+            >
+                Log In
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="register-page">
+
+
+    <div class="register-layout">
+
+
+        <!-- LEFT SIDE -->
+
+        <section class="register-intro">
+
+            <span class="intro-label">
+                JOIN UFEDOZONE
+            </span>
+
+
+            <h1>
+                Start your
+                <span>connection.</span>
+            </h1>
+
+
+            <p>
+                Create your free UfedoZone account
+                and discover real people across Nigeria.
+            </p>
+
+
+            <div class="register-benefits">
+
+                <div>
+
+                    <span>
+                        ♥
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Real people
+                        </strong>
+
+                        <small>
+                            Connect with genuine users.
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        ✓
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Email verification
+                        </strong>
+
+                        <small>
+                            We verify new accounts through email.
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        ◉
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Nigeria-focused
+                        </strong>
+
+                        <small>
+                            Select your state and LGA.
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- FORM CARD -->
+
+        <section class="register-card">
+
+
+            <div class="register-card-heading">
+
+                <div class="register-card-logo">
+
+                    <img
+                        src="ufedozone-logo.png"
+                        alt="UfedoZone"
+                    >
+
+                </div>
+
+
+                <div>
+
+                    <h2>
+                        Create Your Account
+                    </h2>
+
+                    <p>
+                        It only takes a few minutes.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <form id="registerForm">
+
+
+                <!-- FULL NAME -->
+
+                <div class="form-group">
+
+                    <label for="fullName">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="fullName"
+                        name="full_name"
+                        placeholder="Enter your full name"
+                        autocomplete="name"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- PHONE -->
+
+                <div class="form-group">
+
+                    <label for="phone">
+                        Phone Number
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        placeholder="08012345678"
+                        autocomplete="tel"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="example@gmail.com"
+                        autocomplete="email"
+                        required
+                    >
+
+                    <small class="field-note">
+                        A verification code will be sent to this email.
+                    </small>
+
+                </div>
+
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <div class="password-wrap">
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="At least 8 characters"
+                            autocomplete="new-password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="show-password"
+                            id="togglePassword"
+                        >
+                            Show
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- CONFIRM PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="confirmPassword">
+                        Confirm Password
+                    </label>
+
+                    <div class="password-wrap">
+
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            name="confirm_password"
+                            placeholder="Enter your password again"
+                            autocomplete="new-password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="show-password"
+                            id="toggleConfirmPassword"
+                        >
+                            Show
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- DOB -->
+
+                <div class="form-group">
+
+                    <label for="dateOfBirth">
+                        Date of Birth
+                    </label>
+
+                    <input
+                        type="date"
+                        id="dateOfBirth"
+                        name="date_of_birth"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- GENDER -->
+
+                <div class="form-group">
+
+                    <label for="gender">
+                        Gender
+                    </label>
+
+                    <select
+                        id="gender"
+                        name="gender"
+                        required
+                    >
+
+                        <option value="">
+                            Select gender
+                        </option>
+
+                        <option value="male">
+                            Male
+                        </option>
+
+                        <option value="female">
+                            Female
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- RELATIONSHIP STATUS -->
+
+                <div class="form-group">
+
+                    <label for="relationshipStatus">
+                        Relationship Status
+                    </label>
+
+                    <select
+                        id="relationshipStatus"
+                        name="relationship_status"
+                        required
+                    >
+
+                        <option value="">
+                            Select relationship status
+                        </option>
+
+                        <option value="Single">
+                            Single
+                        </option>
+
+                        <option value="In a relationship">
+                            In a relationship
+                        </option>
+
+                        <option value="Married">
+                            Married
+                        </option>
+
+                        <option value="Separated">
+                            Separated
+                        </option>
+
+                        <option value="Divorced">
+                            Divorced
+                        </option>
+
+                        <option value="Widowed">
+                            Widowed
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- STATE -->
+
+                <div class="form-group">
+
+                    <label for="state">
+                        Nigerian State
+                    </label>
+
+                    <select
+                        id="state"
+                        required
+                    >
+
+                        <option value="">
+                            Loading states...
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- LGA -->
+
+                <div class="form-group">
+
+                    <label for="lga">
+                        Local Government Area
+                    </label>
+
+                    <select
+                        id="lga"
+                        required
+                        disabled
+                    >
+
+                        <option value="">
+                            Select state first
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- TERMS -->
+
+                <div class="terms">
+
+                    <input
+                        type="checkbox"
+                        id="terms"
+                        required
+                    >
+
+                    <label for="terms">
+
+                        I agree to the UfedoZone terms
+                        and understand that I must provide
+                        accurate information.
+
+                    </label>
+
+                </div>
+
+
+
+                <!-- REGISTER BUTTON -->
+
+                <button
+                    type="submit"
+                    class="register-btn"
+                    id="registerBtn"
+                >
+                    Create Account
+                </button>
+
+
+
+                <!-- MESSAGE -->
+
+                <div id="message"></div>
+
+
+            </form>
+
+
+            <div class="login-link">
+
+                Already have an account?
+
+                <a href="/login.html">
+                    Log In
+                </a>
+
+            </div>
+
+
+            <p class="verification-note">
+
+                After registration, you'll receive a
+                verification code by email.
+
+            </p>
+
+        </section>
+
+    </div>
+
+</main>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="register-footer">
+
+    <span>
+        © 2026 UfedoZone.
+        All rights reserved.
+    </span>
+
+    <div>
+
+        <a href="/">
+            Home
+        </a>
+
+        <span>•</span>
+
+        <a href="/login.html">
+            Login
+        </a>
+
+    </div>
+
+</footer>
+
+
+
+<script src="register.js"></script>
+
+
+<script>
+
+const passwordInput =
+    document.getElementById(
+        "password"
+    );
+
+const confirmPasswordInput =
+    document.getElementById(
+        "confirmPassword"
+    );
+
+const togglePassword =
+    document.getElementById(
+        "togglePassword"
+    );
+
+const toggleConfirmPassword =
+    document.getElementById(
+        "toggleConfirmPassword"
+    );
+
+
+togglePassword.addEventListener(
+    "click",
+    function () {
+
+        if (
+            passwordInput.type ===
+            "password"
+        ) {
+
+            passwordInput.type =
+                "text";
+
+            togglePassword.textContent =
+                "Hide";
+
+        } else {
+
+            passwordInput.type =
+                "password";
+
+            togglePassword.textContent =
+                "Show";
+        }
+
+    }
+);
+
+
+toggleConfirmPassword.addEventListener(
+    "click",
+    function () {
+
+        if (
+            confirmPasswordInput.type ===
+            "password"
+        ) {
+
+            confirmPasswordInput.type =
+                "text";
+
+            toggleConfirmPassword.textContent =
+                "Hide";
+
+        } else {
+
+            confirmPasswordInput.type =
+                "password";
+
+            toggleConfirmPassword.textContent =
+                "Show";
+        }
+
+    }
+);
+
+</script>
+
+</body>
+
+</html>

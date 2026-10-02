@@ -1,0 +1,18 @@
+{
+  "name": "ufedozone",
+  "version": "1.0.0",
+  "description": "UfedoZone social and dating app",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^18.0.1",
+    "express": "^5.1.0",
+    "googleapis": "^181.0.0",
+    "mysql2": "^3.24.4",
+    "nodemailer": "^10.0.10",
+    "resend": "^6.28.1"
+  }
+}
