@@ -109,24 +109,173 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =====================================================
-    // GET SAVED USER
+    // STORAGE HELPERS
+    // =====================================================
+
+    function readStoredValue(key) {
+
+        // Try localStorage first
+        try {
+
+            const localValue =
+                localStorage.getItem(key);
+
+            if (localValue) {
+
+                return localValue;
+
+            }
+
+        } catch (error) {
+
+            console.warn(
+                "Local storage is unavailable:",
+                error
+            );
+
+        }
+
+
+        // If localStorage is unavailable or empty,
+        // try sessionStorage.
+        try {
+
+            const sessionValue =
+                sessionStorage.getItem(key);
+
+            if (sessionValue) {
+
+                return sessionValue;
+
+            }
+
+        } catch (error) {
+
+            console.warn(
+                "Session storage is unavailable:",
+                error
+            );
+
+        }
+
+
+        return null;
+
+    }
+
+
+    function saveStoredValue(
+        key,
+        value
+    ) {
+
+        // Save to localStorage
+        try {
+
+            localStorage.setItem(
+                key,
+                value
+            );
+
+        } catch (error) {
+
+            console.warn(
+                "Unable to save to local storage:",
+                error
+            );
+
+        }
+
+
+        // Also save to sessionStorage
+        try {
+
+            sessionStorage.setItem(
+                key,
+                value
+            );
+
+        } catch (error) {
+
+            console.warn(
+                "Unable to save to session storage:",
+                error
+            );
+
+        }
+
+    }
+
+
+    function removeStoredValue(
+        key
+    ) {
+
+        try {
+
+            localStorage.removeItem(
+                key
+            );
+
+        } catch (error) {
+
+            console.warn(
+                "Unable to remove local storage value:",
+                error
+            );
+
+        }
+
+
+        try {
+
+            sessionStorage.removeItem(
+                key
+            );
+
+        } catch (error) {
+
+            console.warn(
+                "Unable to remove session storage value:",
+                error
+            );
+
+        }
+
+    }
+
+
+    // =====================================================
+    // GET SAVED USER / RECOVER LOGIN STATE
     // =====================================================
 
     const savedUser =
-        localStorage.getItem(
+        readStoredValue(
             "ufedozone_user"
+        );
+
+
+    const savedUserId =
+        readStoredValue(
+            "userId"
         );
 
 
     let currentUser = null;
 
 
+    // -----------------------------------------------------
+    // Try to recover the complete saved user
+    // -----------------------------------------------------
+
     if (savedUser) {
 
         try {
 
             currentUser =
-                JSON.parse(savedUser);
+                JSON.parse(
+                    savedUser
+                );
 
         } catch (error) {
 
@@ -135,13 +284,44 @@ document.addEventListener("DOMContentLoaded", function () {
                 error
             );
 
-            localStorage.removeItem(
+
+            removeStoredValue(
                 "ufedozone_user"
             );
 
-            localStorage.removeItem(
-                "userId"
+        }
+
+    }
+
+
+    // -----------------------------------------------------
+    // If the full user object is missing but the user ID
+    // exists, recover the account from the server.
+    // -----------------------------------------------------
+
+    if (
+        !currentUser &&
+        savedUserId
+    ) {
+
+        const numericUserId =
+            Number(
+                savedUserId
             );
+
+
+        if (
+            Number.isFinite(
+                numericUserId
+            ) &&
+            numericUserId > 0
+        ) {
+
+            currentUser = {
+
+                id: numericUserId
+
+            };
 
         }
 
@@ -154,11 +334,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (currentUser) {
 
+        // -------------------------------------------------
+        // Save user ID and user object again
+        // -------------------------------------------------
+
         if (currentUser.id) {
 
-            localStorage.setItem(
+            saveStoredValue(
                 "userId",
-                currentUser.id
+                String(
+                    currentUser.id
+                )
+            );
+
+
+            saveStoredValue(
+                "ufedozone_user",
+                JSON.stringify(
+                    currentUser
+                )
             );
 
         }
@@ -333,10 +527,14 @@ document.addEventListener("DOMContentLoaded", function () {
     // UPDATE HEADER USER
     // =====================================================
 
-    function updateHeaderUser(user) {
+    function updateHeaderUser(
+        user
+    ) {
 
         if (!user) {
+
             return;
+
         }
 
 
@@ -346,6 +544,10 @@ document.addEventListener("DOMContentLoaded", function () {
             "User";
 
 
+        // -------------------------------------------------
+        // Header name
+        // -------------------------------------------------
+
         if (headerUserName) {
 
             headerUserName.textContent =
@@ -353,6 +555,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         }
 
+
+        // -------------------------------------------------
+        // Avatar initial
+        // -------------------------------------------------
 
         const firstLetter =
             getFirstLetter(
@@ -367,6 +573,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         }
 
+
+        // -------------------------------------------------
+        // Profile photo
+        // -------------------------------------------------
 
         const profilePhoto =
             user.profile_photo;
@@ -388,6 +598,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         }
 
+
+        // -------------------------------------------------
+        // Make welcome area clickable
+        // -------------------------------------------------
 
         if (welcomeUser) {
 
@@ -497,7 +711,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     "/api/profile/" +
                     encodeURIComponent(
                         userId
-                    )
+                    ),
+                    {
+                        method: "GET",
+                        headers: {
+                            "Accept":
+                                "application/json"
+                        },
+                        cache: "no-store"
+                    }
                 );
 
 
@@ -529,10 +751,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (!profile) {
 
+                console.warn(
+                    "Profile response did not contain user information."
+                );
+
                 return;
 
             }
 
+
+            // -------------------------------------------------
+            // Combine saved information with fresh server
+            // information.
+            // -------------------------------------------------
 
             const updatedUser = {
 
@@ -543,7 +774,13 @@ document.addEventListener("DOMContentLoaded", function () {
             };
 
 
-            localStorage.setItem(
+            // -------------------------------------------------
+            // Save the complete user profile to BOTH storage
+            // locations so the account remains available
+            // when the user opens the site on mobile.
+            // -------------------------------------------------
+
+            saveStoredValue(
                 "ufedozone_user",
                 JSON.stringify(
                     updatedUser
@@ -551,9 +788,33 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
 
+            if (updatedUser.id) {
+
+                saveStoredValue(
+                    "userId",
+                    String(
+                        updatedUser.id
+                    )
+                );
+
+            }
+
+
+            // -------------------------------------------------
+            // Update the page immediately with fresh data.
+            // -------------------------------------------------
+
             updateHeaderUser(
                 updatedUser
             );
+
+
+            // -------------------------------------------------
+            // Keep currentUser updated.
+            // -------------------------------------------------
+
+            currentUser =
+                updatedUser;
 
         } catch (error) {
 
@@ -580,13 +841,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 event.preventDefault();
 
 
-                localStorage.removeItem(
+                // Remove login state from BOTH storage types.
+                removeStoredValue(
                     "ufedozone_user"
                 );
 
-                localStorage.removeItem(
+
+                removeStoredValue(
                     "userId"
                 );
+
+
+                currentUser =
+                    null;
 
 
                 window.location.href =
@@ -607,7 +874,9 @@ document.addEventListener("DOMContentLoaded", function () {
     ) {
 
         if (!peopleGrid) {
+
             return;
+
         }
 
 
@@ -631,7 +900,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     "/api/discover?userId=" +
                     encodeURIComponent(
                         userId
-                    )
+                    ),
+                    {
+                        method: "GET",
+                        headers: {
+                            "Accept":
+                                "application/json"
+                        },
+                        cache: "no-store"
+                    }
                 );
 
 
@@ -787,7 +1064,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // CREATE PERSON CARD
     // =====================================================
 
-    function createPersonCard(user) {
+    function createPersonCard(
+        user
+    ) {
 
         const name =
             user.full_name ||
@@ -795,7 +1074,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         const firstLetter =
-            getFirstLetter(name);
+            getFirstLetter(
+                name
+            );
 
 
         const age =
@@ -1019,7 +1300,9 @@ document.addEventListener("DOMContentLoaded", function () {
     function attachDiscoverActions() {
 
         if (!peopleGrid) {
+
             return;
+
         }
 
 
@@ -1043,7 +1326,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                         if (!card) {
+
                             return;
+
                         }
 
 
@@ -1080,8 +1365,10 @@ document.addEventListener("DOMContentLoaded", function () {
                                 "person-connect-selected"
                             );
 
+
                             button.innerHTML =
                                 "✓";
+
 
                             button.title =
                                 "Connection selected";
@@ -1094,8 +1381,10 @@ document.addEventListener("DOMContentLoaded", function () {
                                         "person-connect-selected"
                                     );
 
+
                                     button.innerHTML =
                                         "♥";
+
 
                                     button.title =
                                         "Connect";
@@ -1124,7 +1413,9 @@ document.addEventListener("DOMContentLoaded", function () {
     ) {
 
         if (!dateOfBirth) {
+
             return null;
+
         }
 
 
@@ -1192,10 +1483,14 @@ document.addEventListener("DOMContentLoaded", function () {
     // FORMAT TEXT
     // =====================================================
 
-    function formatText(value) {
+    function formatText(
+        value
+    ) {
 
         if (!value) {
+
             return "";
+
         }
 
 
@@ -1220,10 +1515,14 @@ document.addEventListener("DOMContentLoaded", function () {
     // FIRST LETTER
     // =====================================================
 
-    function getFirstLetter(name) {
+    function getFirstLetter(
+        name
+    ) {
 
         if (!name) {
+
             return "U";
+
         }
 
 
@@ -1232,7 +1531,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         if (!trimmed) {
+
             return "U";
+
         }
 
 
@@ -1247,7 +1548,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // HTML ESCAPE
     // =====================================================
 
-    function escapeHtml(value) {
+    function escapeHtml(
+        value
+    ) {
 
         if (
             value === null ||
@@ -1288,9 +1591,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // ATTRIBUTE ESCAPE
     // =====================================================
 
-    function escapeAttribute(value) {
+    function escapeAttribute(
+        value
+    ) {
 
-        return escapeHtml(value);
+        return escapeHtml(
+            value
+        );
 
     }
 

@@ -154,7 +154,7 @@ app.get(
                 `API /api/states -> ${result.length} states`
             );
 
-            res.json({
+            return res.json({
 
                 success: true,
 
@@ -170,7 +170,7 @@ app.get(
 
             console.error(error);
 
-            res.status(500).json({
+            return res.status(500).json({
 
                 success: false,
 
@@ -198,14 +198,12 @@ app.get(
 
             const lgas =
                 nigeriaLocations
-
                     .filter(
                         lga =>
                             lga.parent &&
                             lga.parent.id ===
                                 stateId
                     )
-
                     .map(
                         lga => ({
 
@@ -229,7 +227,7 @@ app.get(
                 `API /api/states/${stateId}/lgas -> ${lgas.length} LGAs`
             );
 
-            res.json({
+            return res.json({
 
                 success: true,
 
@@ -245,7 +243,7 @@ app.get(
 
             console.error(error);
 
-            res.status(500).json({
+            return res.status(500).json({
 
                 success: false,
 
@@ -272,7 +270,6 @@ app.post(
                 "Registration request received."
             );
 
-
             const {
                 full_name,
                 phone,
@@ -287,6 +284,10 @@ app.post(
                 lga_name
             } = req.body;
 
+
+            // ====================================
+            // REQUIRED FIELDS
+            // ====================================
 
             if (
                 !full_name ||
@@ -313,6 +314,10 @@ app.post(
             }
 
 
+            // ====================================
+            // PASSWORD VALIDATION
+            // ====================================
+
             if (
                 password.length < 8
             ) {
@@ -327,6 +332,10 @@ app.post(
                 });
             }
 
+
+            // ====================================
+            // CHECK EXISTING PHONE
+            // ====================================
 
             const [
                 existingPhone
@@ -357,6 +366,10 @@ app.post(
             }
 
 
+            // ====================================
+            // CHECK EXISTING EMAIL
+            // ====================================
+
             const [
                 existingEmail
             ] =
@@ -386,6 +399,10 @@ app.post(
             }
 
 
+            // ====================================
+            // GENERATE OTP
+            // ====================================
+
             const otp =
                 crypto
                     .randomInt(
@@ -394,12 +411,15 @@ app.post(
                     )
                     .toString();
 
-
             console.log(
                 "OTP generated for:",
                 email
             );
 
+
+            // ====================================
+            // HASH PASSWORD
+            // ====================================
 
             const passwordHash =
                 await bcrypt.hash(
@@ -408,6 +428,10 @@ app.post(
                 );
 
 
+            // ====================================
+            // HASH OTP
+            // ====================================
+
             const otpHash =
                 await bcrypt.hash(
                     otp,
@@ -415,12 +439,20 @@ app.post(
                 );
 
 
+            // ====================================
+            // OTP EXPIRATION
+            // ====================================
+
             const otpExpiresAt =
                 new Date(
                     Date.now() +
                     10 * 60 * 1000
                 );
 
+
+            // ====================================
+            // REMOVE OLD PENDING REGISTRATION
+            // ====================================
 
             await pool.query(
                 `
@@ -430,6 +462,10 @@ app.post(
                 [phone]
             );
 
+
+            // ====================================
+            // SAVE PENDING REGISTRATION
+            // ====================================
 
             await pool.query(
                 `
@@ -470,6 +506,10 @@ app.post(
             );
 
 
+            // ====================================
+            // SEND OTP EMAIL
+            // ====================================
+
             await sendEmail({
 
                 to: email,
@@ -478,7 +518,7 @@ app.post(
                     "Your UfedoZone verification code",
 
                 text:
-`Welcome to UfedoZone!
+                    `Welcome to UfedoZone!
 
 Your verification code is:
 
@@ -501,7 +541,7 @@ UfedoZone`
             );
 
 
-            res.json({
+            return res.json({
 
                 success: true,
 
@@ -513,7 +553,6 @@ UfedoZone`
 
             });
 
-
         } catch (error) {
 
             console.error(
@@ -522,8 +561,7 @@ UfedoZone`
 
             console.error(error);
 
-
-            res.status(500).json({
+            return res.status(500).json({
 
                 success: false,
 
@@ -552,6 +590,10 @@ app.post(
             } = req.body;
 
 
+            // ====================================
+            // VALIDATION
+            // ====================================
+
             if (
                 !email ||
                 !otp
@@ -567,6 +609,10 @@ app.post(
                 });
             }
 
+
+            // ====================================
+            // FIND PENDING REGISTRATION
+            // ====================================
 
             const [
                 rows
@@ -601,6 +647,10 @@ app.post(
                 rows[0];
 
 
+            // ====================================
+            // CHECK OTP EXPIRATION
+            // ====================================
+
             if (
                 new Date(
                     registration.otp_expires_at
@@ -616,7 +666,6 @@ app.post(
                     [registration.id]
                 );
 
-
                 return res.status(400).json({
 
                     success: false,
@@ -627,6 +676,10 @@ app.post(
                 });
             }
 
+
+            // ====================================
+            // CHECK OTP ATTEMPTS
+            // ====================================
 
             if (
                 registration.otp_attempts >= 5
@@ -640,7 +693,6 @@ app.post(
                     [registration.id]
                 );
 
-
                 return res.status(429).json({
 
                     success: false,
@@ -651,6 +703,10 @@ app.post(
                 });
             }
 
+
+            // ====================================
+            // VERIFY OTP
+            // ====================================
 
             const otpIsCorrect =
                 await bcrypt.compare(
@@ -671,7 +727,6 @@ app.post(
                     [registration.id]
                 );
 
-
                 return res.status(400).json({
 
                     success: false,
@@ -682,6 +737,10 @@ app.post(
                 });
             }
 
+
+            // ====================================
+            // CREATE USER
+            // ====================================
 
             const [
                 result
@@ -721,6 +780,10 @@ app.post(
                 );
 
 
+            // ====================================
+            // REMOVE PENDING REGISTRATION
+            // ====================================
+
             await pool.query(
                 `
                 DELETE FROM pending_registrations
@@ -736,7 +799,7 @@ app.post(
             );
 
 
-            res.json({
+            return res.json({
 
                 success: true,
 
@@ -748,7 +811,6 @@ app.post(
 
             });
 
-
         } catch (error) {
 
             console.error(
@@ -757,8 +819,7 @@ app.post(
 
             console.error(error);
 
-
-            res.status(500).json({
+            return res.status(500).json({
 
                 success: false,
 
@@ -782,13 +843,17 @@ app.post(
         try {
 
             const {
-                phone,
+                emailOrPhone,
                 password
             } = req.body;
 
 
+            // ====================================
+            // VALIDATION
+            // ====================================
+
             if (
-                !phone ||
+                !emailOrPhone ||
                 !password
             ) {
 
@@ -797,11 +862,15 @@ app.post(
                     success: false,
 
                     message:
-                        "Please enter your phone number and password."
+                        "Please enter your email/phone and password."
 
                 });
             }
 
+
+            // ====================================
+            // FIND USER BY EMAIL OR PHONE
+            // ====================================
 
             const [
                 users
@@ -826,11 +895,19 @@ app.post(
                         bio
                     FROM users
                     WHERE phone = ?
+                    OR email = ?
                     LIMIT 1
                     `,
-                    [phone]
+                    [
+                        emailOrPhone,
+                        emailOrPhone
+                    ]
                 );
 
+
+            // ====================================
+            // USER NOT FOUND
+            // ====================================
 
             if (
                 users.length === 0
@@ -841,7 +918,7 @@ app.post(
                     success: false,
 
                     message:
-                        "Phone number or password is incorrect."
+                        "Email/phone or password is incorrect."
 
                 });
             }
@@ -850,6 +927,10 @@ app.post(
             const user =
                 users[0];
 
+
+            // ====================================
+            // CHECK EMAIL VERIFICATION
+            // ====================================
 
             if (
                 !user.email_verified
@@ -866,6 +947,10 @@ app.post(
             }
 
 
+            // ====================================
+            // CHECK PASSWORD EXISTS
+            // ====================================
+
             if (
                 !user.password_hash
             ) {
@@ -881,6 +966,10 @@ app.post(
             }
 
 
+            // ====================================
+            // VERIFY PASSWORD
+            // ====================================
+
             const passwordMatches =
                 await bcrypt.compare(
                     password,
@@ -895,14 +984,22 @@ app.post(
                     success: false,
 
                     message:
-                        "Phone number or password is incorrect."
+                        "Email/phone or password is incorrect."
 
                 });
             }
 
 
+            // ====================================
+            // REMOVE PASSWORD
+            // ====================================
+
             delete user.password_hash;
 
+
+            // ====================================
+            // LOGIN SUCCESSFUL
+            // ====================================
 
             return res.status(200).json({
 
@@ -916,7 +1013,6 @@ app.post(
 
             });
 
-
         } catch (error) {
 
             console.error(
@@ -924,7 +1020,6 @@ app.post(
             );
 
             console.error(error);
-
 
             return res.status(500).json({
 
@@ -953,6 +1048,10 @@ app.get(
                 req.params.userId;
 
 
+            // ====================================
+            // VALIDATE USER ID
+            // ====================================
+
             if (
                 !userId ||
                 isNaN(userId)
@@ -968,6 +1067,10 @@ app.get(
                 });
             }
 
+
+            // ====================================
+            // GET PROFILE
+            // ====================================
 
             const [
                 users
@@ -1022,7 +1125,6 @@ app.get(
 
             });
 
-
         } catch (error) {
 
             console.error(
@@ -1030,7 +1132,6 @@ app.get(
             );
 
             console.error(error);
-
 
             return res.status(500).json({
 
@@ -1072,6 +1173,10 @@ app.put(
             } = req.body;
 
 
+            // ====================================
+            // VALIDATE USER ID
+            // ====================================
+
             if (
                 !userId ||
                 isNaN(userId)
@@ -1087,6 +1192,10 @@ app.put(
                 });
             }
 
+
+            // ====================================
+            // VALIDATE FULL NAME
+            // ====================================
 
             if (
                 !full_name ||
@@ -1104,9 +1213,9 @@ app.put(
             }
 
 
-            // --------------------------------
+            // ====================================
             // BIO VALIDATION
-            // --------------------------------
+            // ====================================
 
             const cleanBio =
                 typeof bio === "string"
@@ -1129,11 +1238,12 @@ app.put(
             }
 
 
-            // --------------------------------
+            // ====================================
             // PROFILE PHOTO VALIDATION
-            // --------------------------------
+            // ====================================
 
-            let cleanProfilePhoto = null;
+            let cleanProfilePhoto =
+                null;
 
 
             if (
@@ -1169,9 +1279,9 @@ app.put(
             }
 
 
-            // --------------------------------
+            // ====================================
             // CHECK USER EXISTS
-            // --------------------------------
+            // ====================================
 
             const [
                 existingUser
@@ -1202,9 +1312,9 @@ app.put(
             }
 
 
-            // --------------------------------
+            // ====================================
             // UPDATE PROFILE
-            // --------------------------------
+            // ====================================
 
             await pool.query(
                 `
@@ -1259,9 +1369,9 @@ app.put(
             );
 
 
-            // --------------------------------
+            // ====================================
             // GET UPDATED PROFILE
-            // --------------------------------
+            // ====================================
 
             const [
                 updatedUsers
@@ -1309,7 +1419,6 @@ app.put(
 
             });
 
-
         } catch (error) {
 
             console.error(
@@ -1317,7 +1426,6 @@ app.put(
             );
 
             console.error(error);
-
 
             return res.status(500).json({
 
@@ -1348,9 +1456,9 @@ app.get(
             );
 
 
-            // --------------------------------
+            // ====================================
             // GET USER ID
-            // --------------------------------
+            // ====================================
 
             const userId =
                 Number.parseInt(
@@ -1359,9 +1467,9 @@ app.get(
                 );
 
 
-            // --------------------------------
+            // ====================================
             // VALIDATE USER ID
-            // --------------------------------
+            // ====================================
 
             if (
                 !Number.isInteger(userId) ||
@@ -1376,13 +1484,12 @@ app.get(
                         "A valid user ID is required."
 
                 });
-
             }
 
 
-            // --------------------------------
+            // ====================================
             // CHECK CURRENT USER
-            // --------------------------------
+            // ====================================
 
             const [
                 currentUser
@@ -1411,13 +1518,12 @@ app.get(
                         "User account not found."
 
                 });
-
             }
 
 
-            // --------------------------------
+            // ====================================
             // GET OTHER VERIFIED USERS
-            // --------------------------------
+            // ====================================
 
             const [
                 users
@@ -1454,18 +1560,18 @@ app.get(
             );
 
 
-            // --------------------------------
-            // ALWAYS RETURN JSON
-            // --------------------------------
+            // ====================================
+            // RETURN USERS
+            // ====================================
 
             return res.status(200).json({
 
                 success: true,
 
-                users: users
+                users:
+                    users
 
             });
-
 
         } catch (error) {
 
@@ -1475,7 +1581,6 @@ app.get(
 
             console.error(error);
 
-
             return res.status(500).json({
 
                 success: false,
@@ -1484,9 +1589,7 @@ app.get(
                     "Unable to load people right now."
 
             });
-
         }
-
     }
 );
 
@@ -1503,6 +1606,7 @@ app.get(
             "https://www.googleapis.com/auth/gmail.send"
         ];
 
+
         const authorizationUrl =
             oauth2Client.generateAuthUrl({
 
@@ -1516,6 +1620,7 @@ app.get(
                     "consent"
 
             });
+
 
         res.redirect(
             authorizationUrl
@@ -1581,7 +1686,7 @@ app.get(
             );
 
 
-            res.send(`
+            return res.send(`
                 <html>
 
                     <head>
@@ -1621,8 +1726,7 @@ app.get(
 
             console.error(error);
 
-
-            res.status(500).send(
+            return res.status(500).send(
                 "Gmail authorization failed. Check the server terminal."
             );
         }
@@ -1638,7 +1742,7 @@ app.get(
     "/",
     (req, res) => {
 
-        res.sendFile(
+        return res.sendFile(
             path.join(
                 __dirname,
                 "public",

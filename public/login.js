@@ -1,218 +1,129 @@
-// ========================================
-// UFEDOZONE LOGIN
-// ========================================
+document.addEventListener("DOMContentLoaded", function () {
 
 const loginForm = document.getElementById("loginForm");
-const phoneInput = document.getElementById("phone");
-const passwordInput = document.getElementById("password");
-const loginBtn = document.getElementById("loginBtn");
-const message = document.getElementById("message");
 
-
-// ========================================
-// SHOW / HIDE PASSWORD
-// ========================================
-
-const togglePassword =
-    document.getElementById("togglePassword");
-
-if (togglePassword && passwordInput) {
-
-    togglePassword.addEventListener(
-        "click",
-        function () {
-
-            if (
-                passwordInput.type === "password"
-            ) {
-
-                passwordInput.type = "text";
-
-                togglePassword.textContent =
-                    "Hide";
-
-            } else {
-
-                passwordInput.type =
-                    "password";
-
-                togglePassword.textContent =
-                    "Show";
-            }
-
-        }
-    );
+if (!loginForm) {
+    return;
 }
 
+loginForm.addEventListener("submit", async function (event) {
 
-// ========================================
-// LOGIN FORM
-// ========================================
+    event.preventDefault();
 
-loginForm.addEventListener(
-    "submit",
-    async function (event) {
+    const emailOrPhoneInput =
+        document.getElementById("emailOrPhone");
 
-        // Stop the page from refreshing
-        event.preventDefault();
+    const passwordInput =
+        document.getElementById("password");
 
+    const emailOrPhone =
+        emailOrPhoneInput.value.trim();
 
-        // Clear previous message
-        message.textContent = "";
-        message.style.color = "";
+    const password =
+        passwordInput.value;
 
+    // ============================================
+    // VALIDATION
+    // ============================================
 
-        const phone =
-            phoneInput.value.trim();
+    if (!emailOrPhone || !password) {
+        alert("Please enter your email/phone and password.");
+        return;
+    }
 
-        const password =
-            passwordInput.value;
+    // ============================================
+    // LOGIN
+    // ============================================
 
+    try {
 
-        // ====================================
-        // BASIC VALIDATION
-        // ====================================
+        const response = await fetch("/api/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                emailOrPhone: emailOrPhone,
+                password: password
+            })
+        });
 
-        if (!phone || !password) {
+        const data = await response.json();
 
-            message.textContent =
-                "Please enter your phone number and password.";
+        // ========================================
+        // LOGIN ERROR
+        // ========================================
 
-            message.style.color =
-                "#dc2626";
+        if (!response.ok) {
+            alert(data.message || "Login failed.");
+            return;
+        }
+
+        // ========================================
+        // CHECK USER DATA
+        // ========================================
+
+        if (!data.user || !data.user.id) {
+
+            alert(
+                "Login was successful, but your account information could not be loaded."
+            );
 
             return;
         }
 
+        // ========================================
+        // PREPARE USER DATA
+        // ========================================
 
-        // ====================================
-        // DISABLE LOGIN BUTTON
-        // ====================================
+        const user = {
+            ...data.user,
+            id: Number(data.user.id)
+        };
 
-        loginBtn.disabled = true;
+        // ========================================
+        // SAVE FULL USER ACCOUNT
+        // ========================================
 
-        loginBtn.textContent =
-            "Logging in...";
+        localStorage.setItem(
+            "ufedozone_user",
+            JSON.stringify(user)
+        );
 
+        sessionStorage.setItem(
+            "ufedozone_user",
+            JSON.stringify(user)
+        );
 
-        try {
+        // ========================================
+        // SAVE USER ID
+        // ========================================
 
-            // ==================================
-            // SEND LOGIN REQUEST
-            // ==================================
+        localStorage.setItem(
+            "userId",
+            String(user.id)
+        );
 
-            const response =
-                await fetch(
-                    "/api/login",
-                    {
-                        method: "POST",
+        sessionStorage.setItem(
+            "userId",
+            String(user.id)
+        );
 
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
+        // ========================================
+        // GO TO HOME PAGE
+        // ========================================
 
-                        body: JSON.stringify({
+        window.location.href = "/";
 
-                            phone:
-                                phone,
+    } catch (error) {
 
-                            password:
-                                password
+        console.error("Login error:", error);
 
-                        })
-                    }
-                );
-
-
-            const data =
-                await response.json();
-
-
-            // ==================================
-            // LOGIN FAILED
-            // ==================================
-
-            if (!response.ok || !data.success) {
-
-                message.textContent =
-                    data.message ||
-                    "Login failed. Please check your details.";
-
-                message.style.color =
-                    "#dc2626";
-
-                loginBtn.disabled =
-                    false;
-
-                loginBtn.textContent =
-                    "Login";
-
-                return;
-            }
-
-
-            // ==================================
-            // LOGIN SUCCESS
-            // ==================================
-
-            message.textContent =
-                "Login successful!";
-
-            message.style.color =
-                "#16a34a";
-
-
-            // ==================================
-            // SAVE USER INFORMATION
-            // ==================================
-
-            if (data.user) {
-
-                localStorage.setItem(
-                    "ufedozone_user",
-                    JSON.stringify(data.user)
-                );
-
-            }
-
-
-            // ==================================
-            // GO TO HOME PAGE
-            // ==================================
-
-            setTimeout(
-                function () {
-
-                    window.location.href =
-                        "index.html";
-
-                },
-                700
-            );
-
-
-        } catch (error) {
-
-            console.error(
-                "Login error:",
-                error
-            );
-
-
-            message.textContent =
-                "Unable to connect to the server. Please try again.";
-
-            message.style.color =
-                "#dc2626";
-
-
-            loginBtn.disabled =
-                false;
-
-            loginBtn.textContent =
-                "Login";
-        }
-
+        alert(
+            "Unable to connect to the server. Please try again."
+        );
     }
-);
+});
+
+
+});

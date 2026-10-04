@@ -1,32 +1,33 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
 
-    <meta charset="UTF-8">
+```
+<meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-    <meta
-        name="description"
-        content="Login to your UfedoZone account."
-    >
+<meta
+    name="description"
+    content="Login to your UfedoZone account."
+>
 
-    <title>Login - UfedoZone</title>
+<title>Login - UfedoZone</title>
 
-    <link
-        rel="stylesheet"
-        href="login.css"
-    >
+<link
+    rel="stylesheet"
+    href="login.css"
+>
+```
 
 </head>
 
-
 <body>
-
 
 <!-- =====================================================
      HEADER
@@ -34,46 +35,46 @@
 
 <header class="auth-header">
 
-    <div class="auth-header-inner">
+```
+<div class="auth-header-inner">
 
-        <a
-            href="/"
-            class="auth-brand"
+    <a
+        href="/"
+        class="auth-brand"
+    >
+
+        <img
+            src="ufedozone-logo.png"
+            alt="UfedoZone"
+            class="auth-logo"
         >
 
-            <img
-                src="ufedozone-logo.png"
-                alt="UfedoZone"
-                class="auth-logo"
-            >
+        <span class="auth-brand-name">
+            Ufedo<span>Zone</span>
+        </span>
 
-            <span class="auth-brand-name">
-                Ufedo<span>Zone</span>
-            </span>
+    </a>
 
+
+    <div class="auth-header-right">
+
+        <span>
+            Don't have an account?
+        </span>
+
+        <a
+            href="/register.html"
+            class="header-create"
+        >
+            Create Account
         </a>
-
-
-        <div class="auth-header-right">
-
-            <span>
-                Don't have an account?
-            </span>
-
-            <a
-                href="/register.html"
-                class="header-create"
-            >
-                Create Account
-            </a>
-
-        </div>
 
     </div>
 
+</div>
+```
+
 </header>
-
-
 
 <!-- =====================================================
      LOGIN AREA
@@ -81,246 +82,245 @@
 
 <main class="auth-page">
 
+```
+<div class="auth-background-shape shape-one"></div>
 
-    <div class="auth-background-shape shape-one"></div>
+<div class="auth-background-shape shape-two"></div>
 
-    <div class="auth-background-shape shape-two"></div>
 
+<div class="login-layout">
 
-    <div class="login-layout">
 
+    <!-- LEFT SIDE -->
 
-        <!-- LEFT SIDE -->
+    <section class="login-intro">
 
-        <section class="login-intro">
+        <span class="intro-label">
+            WELCOME BACK
+        </span>
 
-            <span class="intro-label">
-                WELCOME BACK
-            </span>
 
+        <h1>
+            Good to see
+            <span>you again.</span>
+        </h1>
 
-            <h1>
-                Good to see
-                <span>you again.</span>
-            </h1>
 
+        <p>
+            Log in to UfedoZone and continue
+            discovering real people, new
+            connections and something special.
+        </p>
 
-            <p>
-                Log in to UfedoZone and continue
-                discovering real people, new
-                connections and something special.
-            </p>
 
+        <div class="intro-points">
 
-            <div class="intro-points">
+            <div>
 
-                <div>
-
-                    <span class="intro-icon">
-                        ♥
-                    </span>
-
-                    <div>
-                        <strong>
-                            Real connections
-                        </strong>
-
-                        <small>
-                            Meet genuine people.
-                        </small>
-                    </div>
-
-                </div>
-
-
-                <div>
-
-                    <span class="intro-icon blue">
-                        ✓
-                    </span>
-
-                    <div>
-                        <strong>
-                            Safe &amp; secure
-                        </strong>
-
-                        <small>
-                            Your account stays protected.
-                        </small>
-                    </div>
-
-                </div>
-
-
-                <div>
-
-                    <span class="intro-icon">
-                        ♡
-                    </span>
-
-                    <div>
-                        <strong>
-                            Made for Nigeria
-                        </strong>
-
-                        <small>
-                            Discover people across Nigeria.
-                        </small>
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- LOGIN CARD -->
-
-        <section class="login-card">
-
-
-            <div class="card-logo">
-
-                <img
-                    src="ufedozone-logo.png"
-                    alt="UfedoZone"
-                >
-
-            </div>
-
-
-            <h2>
-                Log In
-            </h2>
-
-
-            <p class="card-subtitle">
-                Welcome back to UfedoZone.
-            </p>
-
-
-            <form id="loginForm">
-
-
-                <!-- PHONE -->
-
-                <div class="form-group">
-
-                    <label for="phone">
-                        Phone Number
-                    </label>
-
-                    <div class="input-wrap">
-
-                        <span class="input-icon">
-                            ☎
-                        </span>
-
-                        <input
-                            type="tel"
-                            id="phone"
-                            name="phone"
-                            placeholder="08012345678"
-                            autocomplete="tel"
-                            required
-                        >
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- PASSWORD -->
-
-                <div class="form-group">
-
-                    <label for="password">
-                        Password
-                    </label>
-
-                    <div class="input-wrap">
-
-                        <span class="input-icon">
-                            ●
-                        </span>
-
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            placeholder="Enter your password"
-                            autocomplete="current-password"
-                            required
-                        >
-
-                        <button
-                            type="button"
-                            class="password-toggle"
-                            id="togglePassword"
-                        >
-                            Show
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- LOGIN BUTTON -->
-
-                <button
-                    type="submit"
-                    class="login-btn"
-                    id="loginBtn"
-                >
-                    Log In
-                </button>
-
-
-                <!-- MESSAGE -->
-
-                <div
-                    id="message"
-                    class="login-message"
-                ></div>
-
-
-            </form>
-
-
-            <div class="card-divider">
-
-                <span>
-                    New to UfedoZone?
+                <span class="intro-icon">
+                    ♥
                 </span>
 
+                <div>
+                    <strong>
+                        Real connections
+                    </strong>
+
+                    <small>
+                        Meet genuine people.
+                    </small>
+                </div>
+
             </div>
 
 
-            <a
-                href="/register.html"
-                class="create-account-link"
+            <div>
+
+                <span class="intro-icon blue">
+                    ✓
+                </span>
+
+                <div>
+                    <strong>
+                        Safe &amp; secure
+                    </strong>
+
+                    <small>
+                        Your account stays protected.
+                    </small>
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <span class="intro-icon">
+                    ♡
+                </span>
+
+                <div>
+                    <strong>
+                        Made for Nigeria
+                    </strong>
+
+                    <small>
+                        Discover people across Nigeria.
+                    </small>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- LOGIN CARD -->
+
+    <section class="login-card">
+
+
+        <div class="card-logo">
+
+            <img
+                src="ufedozone-logo.png"
+                alt="UfedoZone"
             >
-                Create a free account
-            </a>
+
+        </div>
 
 
-            <p class="login-note">
-                By logging in, you agree to use
-                UfedoZone responsibly and respectfully.
-            </p>
+        <h2>
+            Log In
+        </h2>
 
-        </section>
 
-    </div>
+        <p class="card-subtitle">
+            Welcome back to UfedoZone.
+        </p>
+
+
+        <form id="loginForm">
+
+
+            <!-- EMAIL OR PHONE -->
+
+            <div class="form-group">
+
+                <label for="emailOrPhone">
+                    Email or Phone Number
+                </label>
+
+                <div class="input-wrap">
+
+                    <span class="input-icon">
+                        ☎
+                    </span>
+
+                    <input
+                        type="text"
+                        id="emailOrPhone"
+                        name="emailOrPhone"
+                        placeholder="Email or 08012345678"
+                        autocomplete="username"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+
+            <!-- PASSWORD -->
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <div class="input-wrap">
+
+                    <span class="input-icon">
+                        ●
+                    </span>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        id="togglePassword"
+                    >
+                        Show
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- LOGIN BUTTON -->
+
+            <button
+                type="submit"
+                class="login-btn"
+                id="loginBtn"
+            >
+                Log In
+            </button>
+
+
+            <!-- MESSAGE -->
+
+            <div
+                id="message"
+                class="login-message"
+            ></div>
+
+
+        </form>
+
+
+        <div class="card-divider">
+
+            <span>
+                New to UfedoZone?
+            </span>
+
+        </div>
+
+
+        <a
+            href="/register.html"
+            class="create-account-link"
+        >
+            Create a free account
+        </a>
+
+
+        <p class="login-note">
+            By logging in, you agree to use
+            UfedoZone responsibly and respectfully.
+        </p>
+
+    </section>
+
+</div>
+```
 
 </main>
-
-
 
 <!-- =====================================================
      FOOTER
@@ -328,34 +328,37 @@
 
 <footer class="auth-footer">
 
-    <div>
+```
+<div>
 
-        © 2026 UfedoZone.
-        All rights reserved.
+    © 2026 UfedoZone.
+    All rights reserved.
 
-    </div>
+</div>
 
 
-    <div>
+<div>
 
-        <a href="/">
-            Home
-        </a>
+    <a href="/">
+        Home
+    </a>
 
-        <span>•</span>
+    <span>•</span>
 
-        <a href="/register.html">
-            Create Account
-        </a>
+    <a href="/register.html">
+        Create Account
+    </a>
 
-    </div>
+</div>
+```
 
 </footer>
 
+<!-- =====================================================
+     LOGIN JAVASCRIPT
+===================================================== -->
 
-
-<script src="login.js"></script>
-
+<script src="login.js?v=3"></script>
 
 <script>
 
