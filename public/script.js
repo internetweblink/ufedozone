@@ -109,12 +109,104 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =====================================================
+    // MOBILE LOGGED-IN HEADER STYLE
+    // =====================================================
+    //
+    // Your existing CSS hides .nav-buttons on small
+    // screens. When a user is logged in, we override
+    // that behavior so the profile picture/name can
+    // remain visible in the header.
+    //
+    // =====================================================
+
+    const mobileLoggedInStyle =
+        document.createElement("style");
+
+    mobileLoggedInStyle.textContent = `
+        @media (max-width: 850px) {
+
+            body.ufedozone-logged-in .nav-buttons {
+                display: flex !important;
+                align-items: center;
+                margin-left: auto;
+                gap: 8px;
+            }
+
+            body.ufedozone-logged-in
+            .nav-buttons
+            .logged-out-buttons {
+                display: none !important;
+            }
+
+            body.ufedozone-logged-in
+            .nav-buttons
+            .logged-in-buttons {
+                display: flex !important;
+                align-items: center;
+            }
+
+            body.ufedozone-logged-in
+            .logged-in-buttons
+            .nav-logout {
+                display: none !important;
+            }
+
+            body.ufedozone-logged-in
+            .welcome-user {
+                display: inline-flex !important;
+                align-items: center;
+            }
+
+            body.ufedozone-logged-in
+            .mobile-menu-btn {
+                display: flex !important;
+            }
+
+            body.ufedozone-logged-in
+            .mobile-menu
+            .mobile-create {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            body.ufedozone-logged-in
+            .welcome-text {
+                max-width: 120px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            body.ufedozone-logged-in
+            .welcome-avatar {
+                width: 32px;
+                height: 32px;
+                min-width: 32px;
+            }
+        }
+
+        @media (max-width: 430px) {
+
+            body.ufedozone-logged-in
+            .welcome-text {
+                max-width: 90px;
+            }
+        }
+    `;
+
+    document.head.appendChild(
+        mobileLoggedInStyle
+    );
+
+
+    // =====================================================
     // STORAGE HELPERS
     // =====================================================
 
     function readStoredValue(key) {
 
-        // Try localStorage first
         try {
 
             const localValue =
@@ -136,8 +228,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        // If localStorage is unavailable or empty,
-        // try sessionStorage.
         try {
 
             const sessionValue =
@@ -169,7 +259,6 @@ document.addEventListener("DOMContentLoaded", function () {
         value
     ) {
 
-        // Save to localStorage
         try {
 
             localStorage.setItem(
@@ -187,7 +276,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        // Also save to sessionStorage
         try {
 
             sessionStorage.setItem(
@@ -264,10 +352,6 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentUser = null;
 
 
-    // -----------------------------------------------------
-    // Try to recover the complete saved user
-    // -----------------------------------------------------
-
     if (savedUser) {
 
         try {
@@ -293,11 +377,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
-
-    // -----------------------------------------------------
-    // If the full user object is missing but the user ID
-    // exists, recover the account from the server.
-    // -----------------------------------------------------
 
     if (
         !currentUser &&
@@ -335,7 +414,17 @@ document.addEventListener("DOMContentLoaded", function () {
     if (currentUser) {
 
         // -------------------------------------------------
-        // Save user ID and user object again
+        // Mark the entire page as logged in.
+        // This is used by the mobile CSS above.
+        // -------------------------------------------------
+
+        document.body.classList.add(
+            "ufedozone-logged-in"
+        );
+
+
+        // -------------------------------------------------
+        // Save user information again
         // -------------------------------------------------
 
         if (currentUser.id) {
@@ -359,7 +448,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         // -------------------------------------------------
-        // Hide login/create buttons
+        // Hide logged-out desktop buttons
         // -------------------------------------------------
 
         if (loggedOutButtons) {
@@ -371,7 +460,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         // -------------------------------------------------
-        // Show logged-in buttons
+        // Show logged-in desktop buttons
         // -------------------------------------------------
 
         if (loggedInButtons) {
@@ -383,7 +472,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         // -------------------------------------------------
-        // DISPLAY USER NAME
+        // Hide any Create Account links/buttons
+        // inside the mobile menu when logged in.
+        // -------------------------------------------------
+
+        hideMobileCreateAccount();
+
+
+        // -------------------------------------------------
+        // DISPLAY USER NAME AND PHOTO
         // -------------------------------------------------
 
         updateHeaderUser(
@@ -392,7 +489,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         // -------------------------------------------------
-        // HERO BUTTONS
+        // HERO
         // -------------------------------------------------
 
         if (heroLoggedOut) {
@@ -447,7 +544,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         // -------------------------------------------------
-        // LOAD FRESH PROFILE INFORMATION
+        // LOAD FRESH PROFILE
         // -------------------------------------------------
 
         if (currentUser.id) {
@@ -477,6 +574,11 @@ document.addEventListener("DOMContentLoaded", function () {
         // =================================================
         // LOGGED OUT
         // =================================================
+
+        document.body.classList.remove(
+            "ufedozone-logged-in"
+        );
+
 
         if (peopleGrid) {
 
@@ -519,6 +621,58 @@ document.addEventListener("DOMContentLoaded", function () {
             `;
 
         }
+
+    }
+
+
+    // =====================================================
+    // HIDE MOBILE CREATE ACCOUNT
+    // =====================================================
+
+    function hideMobileCreateAccount() {
+
+        if (!mobileMenu) {
+
+            return;
+
+        }
+
+
+        const mobileLinks =
+            mobileMenu.querySelectorAll(
+                "a, button"
+            );
+
+
+        mobileLinks.forEach(
+            function (element) {
+
+                const text =
+                    (
+                        element.textContent ||
+                        ""
+                    )
+                    .trim()
+                    .toLowerCase();
+
+
+                if (
+                    text.includes(
+                        "create account"
+                    ) ||
+                    text === "register" ||
+                    text.includes(
+                        "sign up"
+                    )
+                ) {
+
+                    element.style.display =
+                        "none";
+
+                }
+
+            }
+        );
 
     }
 
@@ -611,6 +765,17 @@ document.addEventListener("DOMContentLoaded", function () {
             welcomeUser.title =
                 "Open my profile";
 
+
+            welcomeUser.addEventListener(
+                "click",
+                function () {
+
+                    window.location.href =
+                        "/profile.html";
+
+                }
+            );
+
         }
 
     }
@@ -677,6 +842,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             welcomeAvatarImage.style.display =
                 "none";
+
 
             welcomeAvatarImage.removeAttribute(
                 "src"
@@ -761,8 +927,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             // -------------------------------------------------
-            // Combine saved information with fresh server
-            // information.
+            // Combine saved information with fresh server data
             // -------------------------------------------------
 
             const updatedUser = {
@@ -775,9 +940,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             // -------------------------------------------------
-            // Save the complete user profile to BOTH storage
-            // locations so the account remains available
-            // when the user opens the site on mobile.
+            // Save updated profile
             // -------------------------------------------------
 
             saveStoredValue(
@@ -801,7 +964,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             // -------------------------------------------------
-            // Update the page immediately with fresh data.
+            // Update header immediately
             // -------------------------------------------------
 
             updateHeaderUser(
@@ -809,12 +972,16 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
 
-            // -------------------------------------------------
-            // Keep currentUser updated.
-            // -------------------------------------------------
-
             currentUser =
                 updatedUser;
+
+
+            // -------------------------------------------------
+            // Make sure mobile Create Account stays hidden
+            // after fresh profile information loads.
+            // -------------------------------------------------
+
+            hideMobileCreateAccount();
 
         } catch (error) {
 
@@ -841,7 +1008,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 event.preventDefault();
 
 
-                // Remove login state from BOTH storage types.
                 removeStoredValue(
                     "ufedozone_user"
                 );
@@ -854,6 +1020,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 currentUser =
                     null;
+
+
+                document.body.classList.remove(
+                    "ufedozone-logged-in"
+                );
 
 
                 window.location.href =
