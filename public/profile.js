@@ -78,14 +78,96 @@ const logoutButton =
 
 
 // ========================================
+// LOCK ACCOUNT FIELDS
+// ========================================
+//
+// These fields are controlled by the account
+// created during registration.
+//
+// They must never become editable from
+// the profile page.
+//
+
+function lockAccountFields() {
+
+    if (emailInput) {
+
+        emailInput.readOnly = true;
+
+        emailInput.setAttribute(
+            "aria-readonly",
+            "true"
+        );
+
+        emailInput.classList.add(
+            "locked-field"
+        );
+    }
+
+
+    if (phoneInput) {
+
+        phoneInput.readOnly = true;
+
+        phoneInput.setAttribute(
+            "aria-readonly",
+            "true"
+        );
+
+        phoneInput.classList.add(
+            "locked-field"
+        );
+    }
+
+
+    if (dateOfBirthInput) {
+
+        dateOfBirthInput.readOnly = true;
+
+        dateOfBirthInput.setAttribute(
+            "aria-readonly",
+            "true"
+        );
+
+        dateOfBirthInput.classList.add(
+            "locked-field"
+        );
+
+        // Prevent opening the date picker.
+        dateOfBirthInput.addEventListener(
+            "click",
+            function () {
+
+                dateOfBirthInput.blur();
+
+            }
+        );
+
+        dateOfBirthInput.addEventListener(
+            "keydown",
+            function (event) {
+
+                event.preventDefault();
+
+            }
+        );
+    }
+}
+
+
+// Lock them immediately.
+lockAccountFields();
+
+
+// ========================================
 // GET LOGGED-IN USER
 // ========================================
 
 function getUserId() {
 
-    // First check the key used by the login system.
     const storedUser =
         localStorage.getItem("ufedozone_user");
+
 
     if (storedUser) {
 
@@ -94,10 +176,12 @@ function getUserId() {
             const user =
                 JSON.parse(storedUser);
 
+
             if (user && user.id) {
 
                 return String(user.id);
             }
+
 
             if (user && user.user_id) {
 
@@ -114,9 +198,9 @@ function getUserId() {
     }
 
 
-    // Also support userId if it exists.
     const userId =
         localStorage.getItem("userId");
+
 
     if (userId) {
 
@@ -640,6 +724,8 @@ async function loadProfile() {
 
             emailInput.value =
                 profile.email || "";
+
+            emailInput.readOnly = true;
         }
 
 
@@ -651,6 +737,8 @@ async function loadProfile() {
 
             phoneInput.value =
                 profile.phone || "";
+
+            phoneInput.readOnly = true;
         }
 
 
@@ -671,7 +759,14 @@ async function loadProfile() {
 
                 dateOfBirthInput.value = "";
             }
+
+            dateOfBirthInput.readOnly = true;
         }
+
+
+        // Make absolutely sure the account
+        // fields remain locked after loading.
+        lockAccountFields();
 
 
         // ====================================
@@ -1561,6 +1656,18 @@ if (saveProfileButton) {
             // --------------------------------
             // PROFILE DATA
             // --------------------------------
+            //
+            // IMPORTANT:
+            //
+            // email
+            // phone
+            // date_of_birth
+            //
+            // are intentionally NOT included.
+            //
+            // They cannot be changed through
+            // this profile update request.
+            //
 
             const profileData = {
 
@@ -1771,10 +1878,21 @@ if (saveProfileButton) {
                             updatedProfile.bio;
 
 
+                        // DO NOT modify:
+                        //
+                        // user.email
+                        // user.phone
+                        // user.date_of_birth
+                        //
+                        // These remain the original
+                        // registration values.
+
+
                         localStorage.setItem(
                             "ufedozone_user",
                             JSON.stringify(user)
                         );
+
 
                     } catch (error) {
 

@@ -117,11 +117,13 @@
         id="loadingMessage"
         class="loading-message"
     >
+
         <div class="loading-spinner"></div>
 
         <span>
             Loading your profile...
         </span>
+
     </div>
 
 
@@ -180,7 +182,9 @@
                     <span>Your connections.</span>
                 </h1>
 
-                <p> Make your profile feel like you</p>
+                <p>
+                    Make your profile feel like you
+                </p>
 
             </div>
 
@@ -240,8 +244,11 @@
                     </h2>
 
                     <span class="profile-verified">
+
                         <span>✓</span>
+
                         Verified
+
                     </span>
 
                 </div>
@@ -360,10 +367,12 @@
                                 type="email"
                                 id="email"
                                 readonly
+                                aria-readonly="true"
+                                class="locked-field"
                             >
 
-                            <small>
-                                Your email address cannot be changed here.
+                            <small class="locked-note">
+                                🔒 Your email address cannot be changed.
                             </small>
 
                         </div>
@@ -382,17 +391,19 @@
                                 type="text"
                                 id="phone"
                                 readonly
+                                aria-readonly="true"
+                                class="locked-field"
                             >
 
-                            <small>
-                                Your phone number cannot be changed here.
+                            <small class="locked-note">
+                                🔒 Your phone number cannot be changed.
                             </small>
 
                         </div>
 
 
 
-                        <!-- DOB -->
+                        <!-- DATE OF BIRTH -->
 
                         <div class="form-group">
 
@@ -404,7 +415,13 @@
                                 type="date"
                                 id="dateOfBirth"
                                 readonly
+                                aria-readonly="true"
+                                class="locked-field"
                             >
+
+                            <small class="locked-note">
+                                🔒 Your date of birth cannot be changed.
+                            </small>
 
                         </div>
 
@@ -536,10 +553,13 @@
                                 </label>
 
                                 <span class="bio-counter">
+
                                     <span id="bioCount">
                                         0
                                     </span>
+
                                     / 500
+
                                 </span>
 
                             </div>
