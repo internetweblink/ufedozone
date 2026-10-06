@@ -80,13 +80,6 @@ const logoutButton =
 // ========================================
 // LOCK ACCOUNT FIELDS
 // ========================================
-//
-// These fields are controlled by the account
-// created during registration.
-//
-// They must never become editable from
-// the profile page.
-//
 
 function lockAccountFields() {
 
@@ -133,7 +126,6 @@ function lockAccountFields() {
             "locked-field"
         );
 
-        // Prevent opening the date picker.
         dateOfBirthInput.addEventListener(
             "click",
             function () {
@@ -165,8 +157,19 @@ lockAccountFields();
 
 function getUserId() {
 
-    const storedUser =
-        localStorage.getItem("ufedozone_user");
+    let storedUser =
+        localStorage.getItem(
+            "ufedozone_user"
+        );
+
+
+    if (!storedUser) {
+
+        storedUser =
+            sessionStorage.getItem(
+                "ufedozone_user"
+            );
+    }
 
 
     if (storedUser) {
@@ -198,8 +201,19 @@ function getUserId() {
     }
 
 
-    const userId =
-        localStorage.getItem("userId");
+    let userId =
+        localStorage.getItem(
+            "userId"
+        );
+
+
+    if (!userId) {
+
+        userId =
+            sessionStorage.getItem(
+                "userId"
+            );
+    }
 
 
     if (userId) {
@@ -290,10 +304,14 @@ function showSuccess(message) {
 async function getResponseData(response) {
 
     const contentType =
-        response.headers.get("content-type") || "";
+        response.headers.get(
+            "content-type"
+        ) || "";
 
 
-    if (!contentType.includes("application/json")) {
+    if (!contentType.includes(
+        "application/json"
+    )) {
 
         const text =
             await response.text();
@@ -697,10 +715,6 @@ async function loadProfile() {
         }
 
 
-        // ====================================
-        // FULL NAME
-        // ====================================
-
         if (fullNameInput) {
 
             fullNameInput.value =
@@ -716,10 +730,6 @@ async function loadProfile() {
         }
 
 
-        // ====================================
-        // EMAIL
-        // ====================================
-
         if (emailInput) {
 
             emailInput.value =
@@ -729,10 +739,6 @@ async function loadProfile() {
         }
 
 
-        // ====================================
-        // PHONE
-        // ====================================
-
         if (phoneInput) {
 
             phoneInput.value =
@@ -741,10 +747,6 @@ async function loadProfile() {
             phoneInput.readOnly = true;
         }
 
-
-        // ====================================
-        // DATE OF BIRTH
-        // ====================================
 
         if (dateOfBirthInput) {
 
@@ -764,14 +766,8 @@ async function loadProfile() {
         }
 
 
-        // Make absolutely sure the account
-        // fields remain locked after loading.
         lockAccountFields();
 
-
-        // ====================================
-        // GENDER
-        // ====================================
 
         setSelectValue(
             genderSelect,
@@ -779,19 +775,11 @@ async function loadProfile() {
         );
 
 
-        // ====================================
-        // RELATIONSHIP STATUS
-        // ====================================
-
         setSelectValue(
             relationshipStatusSelect,
             profile.relationship_status
         );
 
-
-        // ====================================
-        // BIO
-        // ====================================
 
         if (bioInput) {
 
@@ -801,10 +789,6 @@ async function loadProfile() {
             updateBioCount();
         }
 
-
-        // ====================================
-        // EMAIL VERIFICATION
-        // ====================================
 
         if (emailVerification) {
 
@@ -831,10 +815,6 @@ async function loadProfile() {
             }
         }
 
-
-        // ====================================
-        // MEMBER SINCE
-        // ====================================
 
         if (
             memberSince &&
@@ -865,10 +845,6 @@ async function loadProfile() {
             }
         }
 
-
-        // ====================================
-        // STATE AND LGA
-        // ====================================
 
         const stateCode =
             profile.state_code || "";
@@ -906,10 +882,6 @@ async function loadProfile() {
         );
 
 
-        // ====================================
-        // PROFILE PHOTO
-        // ====================================
-
         if (profile.profile_photo) {
 
             setProfilePhoto(
@@ -923,10 +895,6 @@ async function loadProfile() {
             );
         }
 
-
-        // ====================================
-        // SHOW PROFILE
-        // ====================================
 
         if (loadingMessage) {
 
@@ -1537,10 +1505,6 @@ if (saveProfileButton) {
             }
 
 
-            // --------------------------------
-            // FULL NAME
-            // --------------------------------
-
             const fullName =
                 fullNameInput.value.trim();
 
@@ -1557,10 +1521,6 @@ if (saveProfileButton) {
                 return;
             }
 
-
-            // --------------------------------
-            // STATE
-            // --------------------------------
 
             const stateCode =
                 stateSelect.value || null;
@@ -1579,10 +1539,6 @@ if (saveProfileButton) {
                     : null;
 
 
-            // --------------------------------
-            // LGA
-            // --------------------------------
-
             const lgaCode =
                 lgaSelect.value || null;
 
@@ -1599,10 +1555,6 @@ if (saveProfileButton) {
                     ? selectedLga.textContent.trim()
                     : null;
 
-
-            // --------------------------------
-            // PROFILE PHOTO
-            // --------------------------------
 
             let profilePhotoValue =
                 null;
@@ -1632,10 +1584,6 @@ if (saveProfileButton) {
             }
 
 
-            // --------------------------------
-            // BIO
-            // --------------------------------
-
             const cleanBio =
                 bioInput.value.trim();
 
@@ -1652,22 +1600,6 @@ if (saveProfileButton) {
                 return;
             }
 
-
-            // --------------------------------
-            // PROFILE DATA
-            // --------------------------------
-            //
-            // IMPORTANT:
-            //
-            // email
-            // phone
-            // date_of_birth
-            //
-            // are intentionally NOT included.
-            //
-            // They cannot be changed through
-            // this profile update request.
-            //
 
             const profileData = {
 
@@ -1702,10 +1634,6 @@ if (saveProfileButton) {
                     null
             };
 
-
-            // --------------------------------
-            // DISABLE BUTTON
-            // --------------------------------
 
             saveProfileButton.disabled =
                 true;
@@ -1756,10 +1684,6 @@ if (saveProfileButton) {
                     profileData;
 
 
-                // --------------------------------
-                // UPDATE FORM
-                // --------------------------------
-
                 fullNameInput.value =
                     updatedProfile.full_name ||
                     fullName;
@@ -1790,10 +1714,6 @@ if (saveProfileButton) {
                 updateBioCount();
 
 
-                // --------------------------------
-                // UPDATE PHOTO
-                // --------------------------------
-
                 if (
                     updatedProfile.profile_photo
                 ) {
@@ -1808,10 +1728,6 @@ if (saveProfileButton) {
                 }
 
 
-                // --------------------------------
-                // UPDATE LOCATION
-                // --------------------------------
-
                 updateLocation(
                     updatedProfile.state_name ||
                         stateName,
@@ -1820,10 +1736,6 @@ if (saveProfileButton) {
                         lgaName
                 );
 
-
-                // --------------------------------
-                // UPDATE STORED USER
-                // --------------------------------
 
                 const storedUser =
                     localStorage.getItem(
@@ -1878,16 +1790,6 @@ if (saveProfileButton) {
                             updatedProfile.bio;
 
 
-                        // DO NOT modify:
-                        //
-                        // user.email
-                        // user.phone
-                        // user.date_of_birth
-                        //
-                        // These remain the original
-                        // registration values.
-
-
                         localStorage.setItem(
                             "ufedozone_user",
                             JSON.stringify(user)
@@ -1903,10 +1805,6 @@ if (saveProfileButton) {
                     }
                 }
 
-
-                // --------------------------------
-                // SUCCESS
-                // --------------------------------
 
                 showSuccess(
                     "Your profile has been updated successfully."
@@ -1945,29 +1843,61 @@ if (saveProfileButton) {
 // LOGOUT
 // ========================================
 
+function logoutUser() {
+
+    // Clear localStorage login data.
+    localStorage.removeItem(
+        "userId"
+    );
+
+    localStorage.removeItem(
+        "user"
+    );
+
+    localStorage.removeItem(
+        "ufedozone_user"
+    );
+
+
+    // Clear sessionStorage login data too.
+    sessionStorage.removeItem(
+        "userId"
+    );
+
+    sessionStorage.removeItem(
+        "user"
+    );
+
+    sessionStorage.removeItem(
+        "ufedozone_user"
+    );
+
+
+    // Clear any possible menu state.
+    document.body.classList.remove(
+        "ufedozone-logged-in"
+    );
+
+
+    window.location.href =
+        "/";
+}
+
+
+// ========================================
+// PROFILE LOGOUT BUTTON
+// ========================================
+
 if (logoutButton) {
 
     logoutButton.addEventListener(
         "click",
-        function () {
+        function (event) {
 
-            localStorage.removeItem(
-                "userId"
-            );
+            event.preventDefault();
 
+            logoutUser();
 
-            localStorage.removeItem(
-                "user"
-            );
-
-
-            localStorage.removeItem(
-                "ufedozone_user"
-            );
-
-
-            window.location.href =
-                "/";
         }
     );
 }

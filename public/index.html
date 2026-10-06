@@ -153,6 +153,8 @@
                 class="mobile-menu-btn"
                 id="mobileMenuButton"
                 aria-label="Open menu"
+                aria-expanded="false"
+                aria-controls="mobileMenu"
             >
 
                 <span></span>
@@ -169,6 +171,7 @@
         <div
             class="mobile-menu"
             id="mobileMenu"
+            aria-hidden="true"
         >
 
             <a href="/">
@@ -197,6 +200,7 @@
                 <a
                     href="/login.html"
                     class="mobile-login"
+                    id="mobileLogin"
                 >
                     Log In
                 </a>
@@ -204,9 +208,19 @@
                 <a
                     href="/register.html"
                     class="mobile-create"
+                    id="mobileCreate"
                 >
                     Create Account
                 </a>
+
+                <button
+                    type="button"
+                    class="mobile-logout"
+                    id="mobileLogout"
+                    style="display: none;"
+                >
+                    Log Out
+                </button>
 
             </div>
 
@@ -1071,7 +1085,7 @@
 
 
 
-    <script src="script.js?v=3" defer></script>
+    <script src="script.js?v=4" defer></script>
 
 </body>
 </html>
