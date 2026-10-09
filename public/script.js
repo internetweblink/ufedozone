@@ -1691,232 +1691,85 @@ async function loadDiscoverUsers(
 // CREATE PERSON CARD
 // =====================================================
 
-function createPersonCard(
-    user
-) {
 
-    const name =
-        user.full_name ||
-        "UfedoZone Member";
+function createPersonCard(user) {
+    const userName = user.full_name || user.name || "UfedoZone Member";
+    const age = user.age ?? calculateAge(user.date_of_birth || user.dob);
+    const gender = formatText(user.gender);
+    const relationshipStatus = formatText(
+        user.relationship_status || user.relationshipStatus
+    );
+    const state = user.state_name || user.state || "";
+    const lga = user.lga_name || user.lga || "";
+    const bio = user.bio || "";
+    const photo = user.profile_photo || user.photo || "";
 
+    const location = [lga, state].filter(Boolean).join(", ");
+    const safePhoto = /^(data:image\/|https:\/\/)/i.test(photo)
+        ? photo
+        : "";
 
-    const firstLetter =
-        getFirstLetter(
-            name
-        );
+    const avatar = safePhoto
+        ? `<img class="person-photo" src="${escapeAttribute(safePhoto)}" alt="${escapeAttribute(userName)}" loading="lazy">`
+        : `<div class="person-avatar">${escapeHtml(getFirstLetter(userName))}</div>`;
 
-
-    const age =
-        user.age !== null &&
-        user.age !== undefined
-            ? user.age
-            : calculateAge(
-                user.date_of_birth
-            );
-
-
-    const gender =
-        user.gender
-            ? formatText(
-                user.gender
-            )
-            : "";
-
-
-    const relationshipStatus =
-        user.relationship_status
-            ? formatText(
-                user.relationship_status
-            )
-            : "";
-
-
-    const state =
-        user.state_name ||
-        "";
-
-
-    const lga =
-        user.lga_name ||
-        "";
-
-
-    const location =
-        [lga, state]
-            .filter(Boolean)
-            .join(", ");
-
-
-    const bio =
-        user.bio
-            ? user.bio
-            : "Open to making new connections.";
-
-
-    const profilePhoto =
-        user.profile_photo;
-
-
-    let photoHTML;
-
-
-    if (
-        typeof profilePhoto === "string" &&
-        profilePhoto.trim() !== ""
-    ) {
-
-        photoHTML = `
-            <img
-                src="${escapeAttribute(
-                    profilePhoto
-                )}"
-                alt="${escapeAttribute(
-                    name
-                )}"
-                class="person-real-photo"
-                loading="lazy"
-            >
-
-            <span
-                class="person-letter person-photo-fallback"
-                style="display:none;"
-            >
-                ${escapeHtml(
-                    firstLetter
-                )}
-            </span>
-        `;
-
-    } else {
-
-        photoHTML = `
-            <span class="person-letter">
-                ${escapeHtml(
-                    firstLetter
-                )}
-            </span>
-        `;
-
-    }
-
-
-    const basicInfo =
-        [
-
-            age
-                ? age + " years"
-                : "",
-
-            gender,
-
-            relationshipStatus
-
-        ]
-            .filter(Boolean)
-            .join(" • ");
-
+    const ageText = age !== null && age !== undefined && age !== ""
+        ? `${escapeHtml(age)} years`
+        : "";
 
     return `
-        <article
-            class="person-card"
-            data-user-id="${escapeAttribute(
-                user.id
-            )}"
-        >
-
-            <div class="person-image person-blue">
-
-                ${photoHTML}
-
-                <span class="person-status">
-                    ● UfedoZone
-                </span>
-
+        <article class="person-card" data-user-id="${escapeAttribute(user.id)}">
+            <div class="person-card-photo">
+                ${avatar}
             </div>
 
+            <div class="person-card-content">
+                <h3 class="person-name">${escapeHtml(userName)}</h3>
 
-            <div class="person-details">
-
-                <div class="person-main-info">
-
-                    <h3>
-                        ${escapeHtml(
-                            name
-                        )}
-                    </h3>
-
-
-                    ${
-                        basicInfo
-                            ? `
-                                <p class="person-basic-info">
-                                    ${escapeHtml(
-                                        basicInfo
-                                    )}
-                                </p>
-                              `
-                            : ""
-                    }
-
-
-                    ${
-                        location
-                            ? `
-                                <p class="person-location">
-                                    📍 ${escapeHtml(
-                                        location
-                                    )}
-                                </p>
-                              `
-                            : ""
-                    }
-
-
-                    <p class="person-bio">
-                        ${escapeHtml(
-                            bio
-                        )}
-                    </p>
-
+                <div class="person-basic-info">
+                    ${ageText ? `<span>${ageText}</span>` : ""}
+                    ${gender ? `<span>${escapeHtml(gender)}</span>` : ""}
                 </div>
 
+                ${relationshipStatus
+                    ? `<div class="person-status">${escapeHtml(relationshipStatus)}</div>`
+                    : ""}
 
-                <div class="person-card-actions">
+                ${location
+                    ? `<p class="person-location">${escapeHtml(location)}</p>`
+                    : ""}
 
-                    <button
-                        type="button"
-                        class="person-action person-pass"
-                        data-action="pass"
-                        data-user-id="${escapeAttribute(
-                            user.id
-                        )}"
-                        aria-label="Pass"
-                        title="Pass"
-                    >
-                        ×
-                    </button>
-
-
-                    <button
-                        type="button"
-                        class="person-action person-connect"
-                        data-action="connect"
-                        data-user-id="${escapeAttribute(
-                            user.id
-                        )}"
-                        aria-label="Connect"
-                        title="Connect"
-                    >
-                        ♥
-                    </button>
-
-                </div>
-
+                ${bio
+                    ? `<p class="person-bio">${escapeHtml(bio)}</p>`
+                    : ""}
             </div>
 
+            <div class="person-card-actions">
+                <button
+                    type="button"
+                    class="person-action person-pass"
+                    data-action="pass"
+                    title="Pass"
+                    aria-label="Pass on ${escapeAttribute(userName)}"
+                >✕</button>
+
+                <button
+                    type="button"
+                    class="person-action person-like"
+                    data-action="like"
+                    title="Like"
+                    aria-label="Like ${escapeAttribute(userName)}"
+                >♥</button>
+
+                <button
+                    type="button"
+                    class="person-action person-connect"
+                    data-action="connect"
+                    title="Add Friend"
+                >Add Friend</button>
+            </div>
         </article>
     `;
-
 }
 
 
@@ -1925,109 +1778,109 @@ function createPersonCard(
 // =====================================================
 
 function attachDiscoverActions() {
-
     if (!peopleGrid) {
-
         return;
-
     }
 
-
-    const actionButtons =
-        peopleGrid.querySelectorAll(
-            ".person-action"
-        );
-
-
-    actionButtons.forEach(
-        function (button) {
-
-            button.addEventListener(
-                "click",
-                function () {
-
-                    const card =
-                        button.closest(
-                            ".person-card"
-                        );
-
-
-                    if (!card) {
-
-                        return;
-
-                    }
-
-
-                    const action =
-                        button.dataset.action;
-
-
-                    if (
-                        action === "pass"
-                    ) {
-
-                        card.classList.add(
-                            "person-card-passed"
-                        );
-
-
-                        setTimeout(
-                            function () {
-
-                                card.remove();
-
-                            },
-                            300
-                        );
-
-                    }
-
-
-                    if (
-                        action === "connect"
-                    ) {
-
-                        button.classList.add(
-                            "person-connect-selected"
-                        );
-
-
-                        button.innerHTML =
-                            "✓";
-
-
-                        button.title =
-                            "Connection selected";
-
-
-                        setTimeout(
-                            function () {
-
-                                button.classList.remove(
-                                    "person-connect-selected"
-                                );
-
-
-                                button.innerHTML =
-                                    "♥";
-
-
-                                button.title =
-                                    "Connect";
-
-                            },
-                            1200
-                        );
-
-                    }
-
-                }
-            );
-
+    peopleGrid.querySelectorAll("[data-action]").forEach(function (button) {
+        if (button.dataset.actionBound === "true") {
+            return;
         }
-    );
 
+        button.dataset.actionBound = "true";
+
+        button.addEventListener("click", async function () {
+            const action = button.dataset.action;
+            const card = button.closest(".person-card");
+
+            if (!card || !currentUser || !currentUser.id) {
+                alert("Please log in to connect with other members.");
+                return;
+            }
+
+            const targetUserId = card.dataset.userId;
+
+            if (!targetUserId || String(targetUserId) === String(currentUser.id)) {
+                return;
+            }
+
+            if (action === "pass") {
+                card.classList.add("person-card-passed");
+
+                setTimeout(function () {
+                    card.remove();
+                }, 300);
+
+                return;
+            }
+
+            if (action !== "like" && action !== "connect") {
+                return;
+            }
+
+            const originalText = button.innerHTML;
+            const originalTitle = button.title;
+
+            button.disabled = true;
+            button.textContent = "…";
+
+            try {
+                const endpoint = action === "like"
+                    ? "/api/likes"
+                    : "/api/friend-requests";
+
+                const payload = action === "like"
+                    ? {
+                        likerId: currentUser.id,
+                        likedUserId: targetUserId
+                    }
+                    : {
+                        requesterId: currentUser.id,
+                        recipientId: targetUserId
+                    };
+
+                const response = await fetch(endpoint, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json().catch(function () {
+                    return {};
+                });
+
+                if (!response.ok) {
+                    throw new Error(
+                        result.message ||
+                        result.error ||
+                        (action === "like"
+                            ? "Unable to send your like."
+                            : "Unable to send the friend request.")
+                    );
+                }
+
+                if (action === "like") {
+                    button.textContent = "♥";
+                    button.classList.add("person-connect-selected");
+                    button.title = "Liked";
+                } else {
+                    button.textContent = "Request Sent";
+                    button.classList.add("person-connect-selected");
+                    button.title = "Friend request sent";
+                }
+
+            } catch (error) {
+                alert(error.message || "Something went wrong. Please try again.");
+
+                button.innerHTML = originalText;
+                button.title = originalTitle;
+            } finally {
+                button.disabled = false;
+            }
+        });
+    });
 }
 
 
